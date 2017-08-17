@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    .main-logo{
+      margin:0 auto;
+      width:200px;
+      height:500px;
+    }
+    .logoList{
+      margin:0 auto;
+      width:200px;
+      height:500px;
+    }
+    ul,li{
+      padding:0;
+    }
+    ul li{
+      list-style:none;
+    }
+
+    img{
+      max-width:100%;
+      max-height:100%;
+    }
+
+  </style>
+</head>
+<body>
+<div id="app">
+  <logo-picture></logo-picture>
+</div>
+
+<script src="https://unpkg.com/vue"></script>
+<script>
+
+  Vue.component('logo-picture',{
+    template:`
+    <div class='main-logo'>
+      <img :src="items[now].src" @click="toggleFlag"/>
+      <span @click="toggleFlag" class="logoList-arrow"></span>
+      <ul v-show="flagShow" class="logoList">
+          <li v-for="(item,index) in items"
+          :key="index" @click="changeFlag(index)" @mouseover="flagHover(index)"
+          :class="{selectback:index==hoverindex}">
+            <img :src="item.src"/>
+          </li>
+      </ul>
+    </div>
+    `,
+    data:function(){
+      return {
+        items: [{src: 'images/baidu.jpg'}, {src: 'images/google.jpg'}, {src: 'images/decathlon.jpg'}],
+        now: 0,
+        flagShow: false,
+        hoverindex: -1
+      }
+    },
+    methods:{
+        //
+        toggleFlag:function(){
+          this.flagShow=!this.flagShow;
+        },
+        //
+        changeFlag:function(index){
+          this.now=index;
+          this.flagShow=false;
+          bus.$emit('change',index);
+        },
+        flagHover:function(index){
+          this.hoverindex=index;
+        }
+
+
+    }
+
+  });
+  var bus = new Vue({
+    el: '#app'
+  })
+</script>
+</body>
+</html>
